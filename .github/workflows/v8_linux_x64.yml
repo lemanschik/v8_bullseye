@@ -10,31 +10,36 @@ jobs:
     - name: Get Current ENV
       id: set-env
       run: |
-        echo "current_date=$(date -I)" >> $GITHUB_ENV
-        echo "current_path=$(date -I)" >> $GITHUB_ENV
-        echo "current_build_dir=$(pwd)" >> $GITHUB_ENV
-        echo "current_build_pwd=$PWD" >> $GITHUB_ENV
-        echo "depot_tools=$PWD/depot_tools" >> $GITHUB_ENV
+        echo "DATE=$(date -I)" >> $GITHUB_ENV
+        echo "CWD=$(pwd)" >> $GITHUB_ENV
+        echo "DEPOT_TOOLS=$(pwd)/depot_tools" >> $GITHUB_ENV
+        echo "PATH=$(pwd)/depot_tools:$PATH" >> $GITHUB_ENV
+        echo "T=$DEPOT_TOOLS" >> $GITHUB_ENV
     - name: Cache Build Deps
       id: cache-build-deps
       uses: actions/cache@v3
       with:
         path: build
-        key: ${{ runner.os }}-build-deps-${{ env.current_date }}
+        key: ${{ runner.os }}-build-deps-${{ env.DATE }}
     - name: Install dependencies
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
+      env:
+        PATH: ${{ env.PATH }}
+        DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
       run: |
         mkdir -p build && cd build
         sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl python lsb-release
-        rm -rf depot_tools
+        rm -rf $DEPOT_TOOLS
         git clone --single-branch https://chromium.googlesource.com/chromium/tools/depot_tools.git
-        export PATH="$depot_tools:${PATH}"
+        export PATH="$DEPOT_TOOLS:${PATH}"
         gclient
         fetch v8
         cd v8 && git checkout branch-heads/10.7
     - name: Configure
+      env: 
+        DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
       run: |
-        export PATH="$depot_tools:${PATH}"
+        export PATH="$DEPOT_TOOLS:${PATH}"
         cd build/v8 && git checkout branch-heads/10.7
         gclient sync
         ./build/install-build-deps.sh --no-syms --no-chromeos-fonts --no-arm --no-nacl --no-backwards-compatible
