@@ -32,7 +32,7 @@ jobs:
         fetch v8
         cd v8
         git checkout branch-heads/10.7
-        git gclient sync
+        git-gclient sync
         ./build/install-build-deps.sh --no-syms --no-chromeos-fonts --no-arm --no-nacl --no-backwards-compatible
     - name: Configure
       run: |
