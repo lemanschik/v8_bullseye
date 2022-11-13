@@ -1,16 +1,18 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 WORKDIR /build
 RUN apt update && apt upgrade -y && apt install -y git curl python lsb-release sudo
 RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+ENV DEPOT_TOOLS="/build/depot_tools"
 ENV PATH="/build/depot_tools:${PATH}"
 RUN gclient
 RUN fetch v8
+ENV V8="/build/v8" 
 WORKDIR /build/v8
-RUN git checkout branch-heads/10.6
-RUN gclient sync
-RUN ./build/install-build-deps.sh --no-syms --no-chromeos-fonts --no-arm --no-nacl --no-backwards-compatible
-RUN ./tools/dev/v8gen.py \
+RUN git checkout branch-heads/10.8
+RUN $DEPOT_TOOLS/gclient sync
+RUN $V8/build/install-build-deps.sh --no-syms --no-chromeos-fonts --no-arm --no-nacl --no-backwards-compatible
+RUN $V8/tools/dev/v8gen.py \
 	x64.release \
 	-- \
 	target_os=\"linux\" \
