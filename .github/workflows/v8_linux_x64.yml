@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Get Current ENV
+    - name: Open the Office for Ninja Coders to enter
       id: set-env
       run: |
         echo "DATE=$(date -I)" >> $GITHUB_ENV
@@ -35,7 +35,7 @@ jobs:
         gclient
         fetch v8
         cd v8 && git checkout branch-heads/10.7
-    - name: Configure
+    - name: Send Recruiter a Request to find a Code Ninja.
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
       env: 
         BRANCH: branch-heads/10.7
@@ -79,16 +79,19 @@ jobs:
         v8_enable_pointer_compression=true \
         v8_scriptormodule_legacy_lifetime=true \
         v8_enable_sandbox=false
-    - name: Cache Build Result
+    - name: Hire Ninja Coder
       id: cache-build
       uses: actions/cache@v3
       with:
         path: build
         key: ${{ runner.os }}-build-${{ env.DATE }}
-    - name: Build
+    - name: Ninja Coder is Coding
       if: steps.cache-build.outputs.cache-hit != 'true'
-      run: ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN)
-    - name: Run distcheck
+      env: 
+        PATH: ${{ env.PATH }}
+        V8: ${{ env.V8 }}
+      run: cd $V8 && ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN)
+    - name: Ninja Coder can get Fired and rehired later more cheap.
       run: ls
 
 
