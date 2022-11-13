@@ -23,6 +23,8 @@ jobs:
         mkdir -p build && cd build
         echp $PWD
         echo PATH="${PWD}/build/depot_tools:${PATH}"
+        echo $(pwd)
+        echo PATH="$(pwd)/build/depot_tools:${PATH}"
         exit
         sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl python lsb-release sudo
         rm -rf depot_tools
