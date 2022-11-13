@@ -16,13 +16,13 @@ jobs:
         echo "DEPOT_TOOLS=$(pwd)/build/depot_tools" >> $GITHUB_ENV
         echo "PATH=$(pwd)/build/depot_tools:$PATH" >> $GITHUB_ENV
         echo "T=$DEPOT_TOOLS" >> $GITHUB_ENV
-    - name: Cache Build Deps
+    - name: Turning on the Servers for the Ninja Coders.
       id: cache-build-deps
       uses: actions/cache@v3
       with:
         path: build
         key: ${{ runner.os }}-build-deps-${{ env.DATE }}
-    - name: Install dependencies
+    - name: Create work for Ninja's
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
       env:
         PATH: ${{ env.PATH }}
@@ -35,7 +35,7 @@ jobs:
         gclient
         fetch v8
         cd v8 && git checkout branch-heads/10.7
-    - name: Send Recruiter a Request to find a Code Ninja.
+    - name: Send Recruiter a Request to find a Code Ninjas that know - Linux x86_64.
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
       env: 
         BRANCH: branch-heads/10.7
@@ -79,19 +79,19 @@ jobs:
         v8_enable_pointer_compression=true \
         v8_scriptormodule_legacy_lifetime=true \
         v8_enable_sandbox=false
-    - name: Hire Ninja Coder
+    - name: Hire Ninja Coders to work on - Linux x86_64 Builds
       id: cache-build
       uses: actions/cache@v3
       with:
         path: build
         key: ${{ runner.os }}-build-${{ env.DATE }}
-    - name: Ninja Coder is Coding
+    - name: Ninjas Coding on - Linux x86_64 Builds
       if: steps.cache-build.outputs.cache-hit != 'true'
       env: 
         PATH: ${{ env.PATH }}
         V8: ${{ env.V8 }}
       run: cd $V8 && ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN)
-    - name: Ninja Coder can get Fired and rehired later more cheap.
+    - name: Ninjas finished the job - Linux x86_64 Build coders can get Fired and rehired later more cheap from the cache.
       run: ls
 
 
