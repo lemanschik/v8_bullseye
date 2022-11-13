@@ -24,13 +24,9 @@ jobs:
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
       run: |
         mkdir -p build && cd build
-        echp $PWD
-        echo PATH="${PWD}/build/depot_tools:${PATH}"
-        echo $(pwd)
-        echo PATH="$(pwd)/build/depot_tools:${PATH}"
-        exit
-        sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl python lsb-release sudo
+        sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl python lsb-release
         rm -rf depot_tools
+        git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
         export PATH="$PWD/build/depot_tools:${PATH}"
         gclient
         fetch v8
