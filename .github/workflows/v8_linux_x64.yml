@@ -26,8 +26,8 @@ jobs:
         mkdir -p build && cd build
         sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl python lsb-release
         rm -rf depot_tools
-        git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-        export PATH="$PWD/build/depot_tools:${PATH}"
+        git clone --single-branch https://chromium.googlesource.com/chromium/tools/depot_tools.git
+        export PATH="$PWD/depot_tools:${PATH}"
         gclient
         fetch v8
         cd v8
