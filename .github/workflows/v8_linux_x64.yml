@@ -1,9 +1,9 @@
-name: v8 github linux x64 CI
+name: Manage the v8 Related Coders and Jobs we call them Ninjas
 
 on: workflow_dispatch
 
 jobs:
-  build:
+  build-x86-64:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
