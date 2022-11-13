@@ -3,7 +3,7 @@ name: Manage the v8 Jobs and related Coders.
 on: workflow_dispatch
 
 jobs:
-  build-x86_64:
+  build-ubuntu-22_04-x86_64:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
@@ -11,11 +11,13 @@ jobs:
       id: set-env
       run: |
         echo "DATE=$(date -I)" >> $GITHUB_ENV
-        echo "CWD=$(pwd)/build" >> $GITHUB_ENV
-        echo "V8=$(pwd)/build/v8" >> $GITHUB_ENV
-        echo "DEPOT_TOOLS=$(pwd)/build/depot_tools" >> $GITHUB_ENV
-        echo "PATH=$(pwd)/build/depot_tools:$PATH" >> $GITHUB_ENV
-        echo "T=$DEPOT_TOOLS" >> $GITHUB_ENV
+        export WORKDIR="$(pwd)/build"
+        echo "WORKDIR=${WORKDIR}" >> $GITHUB_ENV
+        echo "V8=${WORKDIR}/v8" >> $GITHUB_ENV
+        export DEPOT_TOOLS="${WORKDIR}/depot_tools"
+        echo "DEPOT_TOOLS=${DEPOT_TOOLS}" >> $GITHUB_ENV
+        echo "PATH=${DEPOT_TOOLS}:$PATH" >> $GITHUB_ENV
+        echo "BRANCH=branch-heads/10.7" >> $GITHUB_ENV
     - name: build-linux-x86_64 - Turning on the Servers for the Ninja Coders that work on this job.
       id: cache-build-deps
       uses: actions/cache@v3
@@ -31,14 +33,12 @@ jobs:
         mkdir -p build && cd build
         sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl python lsb-release
         git clone --single-branch https://chromium.googlesource.com/chromium/tools/depot_tools.git
-        export PATH="$DEPOT_TOOLS:${PATH}"
-        gclient
-        fetch v8
-        cd v8 && git checkout branch-heads/10.7
+        $DEPOT_TOOLS/gclient
+        $DEPOT_TOOLS/fetch v8
     - name: build-linux-x86_64 - Send Recruiter a Request to find a Code Ninjas that know how to Software for linux-x86_64
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
       env: 
-        BRANCH: branch-heads/10.7
+        BRANCH: ${{ env.BRANCH }}
         PATH: ${{ env.PATH }}
         V8: ${{ env.V8 }}
         DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
