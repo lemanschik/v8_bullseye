@@ -21,6 +21,9 @@ jobs:
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
       run: |
         mkdir -p build && cd build
+        echp $PWD
+        echo PATH="${PWD}/build/depot_tools:${PATH}"
+        exit
         sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl python lsb-release sudo
         rm -rf depot_tools
         export PATH="$PWD/build/depot_tools:${PATH}"
