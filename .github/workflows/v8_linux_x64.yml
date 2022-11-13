@@ -12,8 +12,8 @@ jobs:
       run: |
         echo "DATE=$(date -I)" >> $GITHUB_ENV
         echo "CWD=$(pwd)" >> $GITHUB_ENV
-        echo "DEPOT_TOOLS=$(pwd)/depot_tools" >> $GITHUB_ENV
-        echo "PATH=$(pwd)/depot_tools:$PATH" >> $GITHUB_ENV
+        echo "DEPOT_TOOLS=$(pwd)/build/depot_tools" >> $GITHUB_ENV
+        echo "PATH=$(pwd)/build/depot_tools:$PATH" >> $GITHUB_ENV
         echo "T=$DEPOT_TOOLS" >> $GITHUB_ENV
     - name: Cache Build Deps
       id: cache-build-deps
@@ -29,7 +29,6 @@ jobs:
       run: |
         mkdir -p build && cd build
         sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl python lsb-release
-        rm -rf $DEPOT_TOOLS
         git clone --single-branch https://chromium.googlesource.com/chromium/tools/depot_tools.git
         export PATH="$DEPOT_TOOLS:${PATH}"
         gclient
