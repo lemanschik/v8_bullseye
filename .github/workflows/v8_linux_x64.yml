@@ -1,4 +1,4 @@
-name: Manage the v8 Related Coders and Jobs we call them Ninjas
+name: Manage the v8 Jobs and related Coders.
 
 on: workflow_dispatch
 
@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Open the Office for Ninja Coders to enter
+    - name: Open the Office for the Ninjas makes coders feel less cheap to be called Ninja implicits hornor.
       id: set-env
       run: |
         echo "DATE=$(date -I)" >> $GITHUB_ENV
