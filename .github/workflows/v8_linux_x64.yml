@@ -3,7 +3,7 @@ name: Manage the v8 Related Coders and Jobs we call them Ninjas
 on: workflow_dispatch
 
 jobs:
-  build-x86-64:
+  build-x86_64:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -16,13 +16,13 @@ jobs:
         echo "DEPOT_TOOLS=$(pwd)/build/depot_tools" >> $GITHUB_ENV
         echo "PATH=$(pwd)/build/depot_tools:$PATH" >> $GITHUB_ENV
         echo "T=$DEPOT_TOOLS" >> $GITHUB_ENV
-    - name: Turning on the Servers for the Ninja Coders.
+    - name: build-linux-x86_64 - Turning on the Servers for the Ninja Coders that work on this job.
       id: cache-build-deps
       uses: actions/cache@v3
       with:
         path: build
         key: ${{ runner.os }}-build-deps-${{ env.DATE }}
-    - name: Create work for Ninja's
+    - name: build-linux-x86_64 - Create work for Ninja's
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
       env:
         PATH: ${{ env.PATH }}
@@ -35,7 +35,7 @@ jobs:
         gclient
         fetch v8
         cd v8 && git checkout branch-heads/10.7
-    - name: Send Recruiter a Request to find a Code Ninjas that know - Linux x86_64.
+    - name: build-linux-x86_64 - Send Recruiter a Request to find a Code Ninjas that know how to Software for linux-x86_64
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
       env: 
         BRANCH: branch-heads/10.7
@@ -79,19 +79,19 @@ jobs:
         v8_enable_pointer_compression=true \
         v8_scriptormodule_legacy_lifetime=true \
         v8_enable_sandbox=false
-    - name: Hire Ninja Coders to work on - Linux x86_64 Builds
+    - name: build-linux-x86_64 - Hire Ninja Coders but prepare Papers for fireing them fast after they finished the job.
       id: cache-build
       uses: actions/cache@v3
       with:
         path: build
         key: ${{ runner.os }}-build-${{ env.DATE }}
-    - name: Ninjas Coding on - Linux x86_64 Builds
+    - name: build-linux-x86_64 - Ninjas Coding on - build-linux-x86_64
       if: steps.cache-build.outputs.cache-hit != 'true'
       env: 
         PATH: ${{ env.PATH }}
         V8: ${{ env.V8 }}
       run: cd $V8 && ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN)
-    - name: Ninjas finished the job - Linux x86_64 Build coders can get Fired and rehired later more cheap from the cache.
+    - name: build-linux-x86_64 - Ninjas finished the job coders can get Fired and rehired later more cheap from the cache.
       run: ls
 
 
