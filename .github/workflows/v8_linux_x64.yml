@@ -36,6 +36,7 @@ jobs:
         fetch v8
         cd v8 && git checkout branch-heads/10.7
     - name: Configure
+      if: steps.cache-build-deps.outputs.cache-hit != 'true'
       env: 
         BRANCH: branch-heads/10.7
         PATH: ${{ env.PATH }}
@@ -78,16 +79,16 @@ jobs:
         v8_enable_pointer_compression=true \
         v8_scriptormodule_legacy_lifetime=true \
         v8_enable_sandbox=false
-#    - name: Cache Build Result
-#      id: cache-build
-#      uses: actions/cache@v3
-#      with:
-#        path: build
-#        key: ${{ runner.os }}-build-${{ env.current_date }}
-#    - name: Build
-#      if: steps.cache-build.outputs.cache-hit != 'true'
-#      run: ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN)
-#    - name: Run distcheck
-#      run: ls
+    - name: Cache Build Result
+      id: cache-build
+      uses: actions/cache@v3
+      with:
+        path: build
+        key: ${{ runner.os }}-build-${{ env.DATE }}
+    - name: Build
+      if: steps.cache-build.outputs.cache-hit != 'true'
+      run: ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN)
+    - name: Run distcheck
+      run: ls
 
 
