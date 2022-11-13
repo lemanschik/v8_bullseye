@@ -21,8 +21,7 @@ jobs:
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
       run: |
         mkdir -p build && cd build
-        sudo su -
-        apt-get update -y && apt-get upgrade -y && apt-get install -y git curl python lsb-release sudo
+        sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl python lsb-release sudo
         rm -rf depot_tools
         git clone --single-branch https://chromium.googlesource.com/chromium/tools/depot_tools.git
         export PATH="/build/depot_tools:${PATH}"
