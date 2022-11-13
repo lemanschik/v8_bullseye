@@ -11,7 +11,8 @@ jobs:
       id: set-env
       run: |
         echo "DATE=$(date -I)" >> $GITHUB_ENV
-        echo "CWD=$(pwd)" >> $GITHUB_ENV
+        echo "CWD=$(pwd)/build" >> $GITHUB_ENV
+        echo "V8=$(pwd)/build/v8" >> $GITHUB_ENV
         echo "DEPOT_TOOLS=$(pwd)/build/depot_tools" >> $GITHUB_ENV
         echo "PATH=$(pwd)/build/depot_tools:$PATH" >> $GITHUB_ENV
         echo "T=$DEPOT_TOOLS" >> $GITHUB_ENV
@@ -36,13 +37,15 @@ jobs:
         cd v8 && git checkout branch-heads/10.7
     - name: Configure
       env: 
+        BRANCH: branch-heads/10.7
+        PATH: ${{ env.PATH }}
+        V8: ${{ env.V8 }}
         DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
       run: |
-        export PATH="$DEPOT_TOOLS:${PATH}"
-        cd build/v8 && git checkout branch-heads/10.7
-        gclient sync
-        ./build/install-build-deps.sh --no-syms --no-chromeos-fonts --no-arm --no-nacl --no-backwards-compatible
-        ./tools/dev/v8gen.py x64.release -- target_os=\"linux\" target_cpu=\"x64\" v8_target_cpu=\"x64\" \
+        cd $V8 && git checkout $BRANCH
+        $DEPOT_TOOLS/gclient sync
+        $V8/build/install-build-deps.sh --no-syms --no-chromeos-fonts --no-arm --no-nacl --no-backwards-compatible
+        $V8/tools/dev/v8gen.py x64.release -- target_os=\"linux\" target_cpu=\"x64\" v8_target_cpu=\"x64\" \
         v8_use_external_startup_data=false \
         v8_enable_future=true \
         is_official_build=false \
