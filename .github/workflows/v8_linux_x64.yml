@@ -32,10 +32,10 @@ jobs:
         fetch v8
         cd v8
         git checkout branch-heads/10.7
-        git-gclient sync
-        ./build/install-build-deps.sh --no-syms --no-chromeos-fonts --no-arm --no-nacl --no-backwards-compatible
     - name: Configure
       run: |
+        gclient sync
+        ./build/install-build-deps.sh --no-syms --no-chromeos-fonts --no-arm --no-nacl --no-backwards-compatible
         ./tools/dev/v8gen.py x64.release -- target_os=\"linux\" target_cpu=\"x64\" v8_target_cpu=\"x64\" \
         v8_use_external_startup_data=false \
         v8_enable_future=true \
