@@ -31,15 +31,16 @@ jobs:
         DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
       run: |
         # Note that this is exactly what docker build does for each RUN defined layer
-        cat <<"EOF" | docker run  -i --name build-depot_tools debian:bullseye-slim
+        cat <<'EOF' | docker run  -i --name build-depot_tools debian:bullseye-slim
          apt update && apt upgrade -y && apt install -y git curl python lsb-release sudo
          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
          /depot_tools/gclient
         EOF
         
         docker commit build-depot_tools build:depot_tools && docker rm build-depot_tools
+        docker save v8-bullseye-x86_64:latest | gzip > build/v8-bullseye-x86_64_latest.tar.gz
         
-        cat <<"EOF" | docker run  -i --name build-v8-bullseye-x86_64 build:depot_tools
+        cat <<'EOF' | docker run  -i --name build-v8-bullseye-x86_64 build:depot_tools
           /depot_tools/fetch v8 && cd v8 && git checkout branch-heads/10.8 
           /depot_tools/gclient sync
           /v8/build/install-build-deps.sh --no-syms --no-chromeos-fonts --no-arm --no-nacl --no-backwards-compatible
