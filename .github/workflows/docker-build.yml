@@ -30,8 +30,7 @@ jobs:
         PATH: ${{ env.PATH }}
         DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
       run: |
-        export DOCKER_BUILD=$(docker build .)
-        echo "DOCKER_BUILD=$DOCKER_BUILD" >> $GITHUB_ENV
+        docker build -t v8-bullseye-x86_64 .
         mkdir build
-        docker save $DOCKER_BUILD | gzip > build/myimage_latest.tar.gz
+        docker save v8-bullseye-x86_64 | gzip > build/v8-bullseye-x86_64_latest.tar.gz
 
