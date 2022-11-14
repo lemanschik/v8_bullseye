@@ -3,10 +3,49 @@ name: Manage the v8 Jobs and related Coders.
 on: workflow_dispatch
 
 jobs:
+  update-depot-tools:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Open the Office for the Ninjas makes coders feel less cheap to be called Ninja implicits hornor.
+      id: set-env
+      run: |
+        echo "DATE=$(date -I)" >> $GITHUB_ENV
+        export WORKDIR="$(pwd)/build"
+        echo "WORKDIR=${WORKDIR}" >> $GITHUB_ENV
+        echo "V8=${WORKDIR}/v8" >> $GITHUB_ENV
+        export DEPOT_TOOLS="${WORKDIR}/depot_tools"
+        echo "DEPOT_TOOLS=${DEPOT_TOOLS}" >> $GITHUB_ENV
+        echo "PATH=${DEPOT_TOOLS}:$PATH" >> $GITHUB_ENV
+        echo "BRANCH=branch-heads/10.7" >> $GITHUB_ENV
+    - name: build-linux-x86_64 - Turning on the Servers for the Ninja Coders that work on this job.
+      id: cache-depot-tools
+      uses: actions/cache@v3
+      with:
+        path: build/depot_tools
+        key: ${{ runner.os }}-depot_tools
+    - name: build-linux-x86_64 - Create work for Ninja's
+      if: steps.cache-depot-tools.outputs.cache-hit != 'true'
+      env:
+        PATH: ${{ env.PATH }}
+        DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
+      run: |
+        mkdir -p build && cd build
+        sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl lsb-release python-is-python3 build-essential
+        git clone --single-branch https://chromium.googlesource.com/chromium/tools/depot_tools.git
+        $DEPOT_TOOLS/gclient
+        $DEPOT_TOOLS/fetch v8
   build-ubuntu-22_04-x86_64:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
+    - name: build-linux-x86_64 - Turning on the Servers for the Ninja Coders that work on this job.
+      id: cache-depot-tools
+      uses: actions/cache@v3
+      with:
+        path: build/depot_tools
+        key: ${{ runner.os }}-build-deps-${{ env.DATE }}
+        restore-keys: ${{ runner.os }}-depot-tools
     - name: Open the Office for the Ninjas makes coders feel less cheap to be called Ninja implicits hornor.
       id: set-env
       run: |
@@ -24,17 +63,6 @@ jobs:
       with:
         path: build
         key: ${{ runner.os }}-build-deps-${{ env.DATE }}
-    - name: build-linux-x86_64 - Create work for Ninja's
-      if: steps.cache-build-deps.outputs.cache-hit != 'true'
-      env:
-        PATH: ${{ env.PATH }}
-        DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
-      run: |
-        mkdir -p build && cd build
-        sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl lsb-release python-is-python3 build-essential
-        git clone --single-branch https://chromium.googlesource.com/chromium/tools/depot_tools.git
-        $DEPOT_TOOLS/gclient
-        $DEPOT_TOOLS/fetch v8
     - name: build-linux-x86_64 - Send Recruiter a Request to find a Code Ninjas that know how to Code and Build Software for linux-x86_64
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
       env: 
@@ -43,6 +71,7 @@ jobs:
         V8: ${{ env.V8 }}
         DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
       run: |
+        sudo chmod 0777 /etc/lsb-release
         cat <<EOF > /etc/lsb-release
         DISTRIB_ID=Ubuntu
         DISTRIB_RELEASE=20.10
