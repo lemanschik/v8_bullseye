@@ -35,7 +35,7 @@ jobs:
         git clone --single-branch https://chromium.googlesource.com/chromium/tools/depot_tools.git
         $DEPOT_TOOLS/gclient
         $DEPOT_TOOLS/fetch v8
-    - name: build-linux-x86_64 - Send Recruiter a Request to find a Code Ninjas that know how to Software for linux-x86_64
+    - name: build-linux-x86_64 - Send Recruiter a Request to find a Code Ninjas that know how to Code and Build Software for linux-x86_64
       if: steps.cache-build-deps.outputs.cache-hit != 'true'
       env: 
         BRANCH: ${{ env.BRANCH }}
