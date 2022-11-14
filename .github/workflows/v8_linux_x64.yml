@@ -31,7 +31,7 @@ jobs:
         DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
       run: |
         mkdir -p build && cd build
-        sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl lsb-release build-essentials
+        sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git curl lsb-release python-is-python3 build-essentials
         git clone --single-branch https://chromium.googlesource.com/chromium/tools/depot_tools.git
         $DEPOT_TOOLS/gclient
         $DEPOT_TOOLS/fetch v8
