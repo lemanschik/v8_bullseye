@@ -48,6 +48,7 @@ jobs:
         DISTRIB_RELEASE=20.10
         DISTRIB_CODENAME=jammy
         DISTRIB_DESCRIPTION="Ubuntu 22.04"
+        EOF
         cd $V8 && git checkout $BRANCH
         $DEPOT_TOOLS/gclient sync
         $V8/build/install-build-deps.sh --no-syms --no-chromeos-fonts --no-arm --no-nacl --no-backwards-compatible
