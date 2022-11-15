@@ -37,7 +37,7 @@ jobs:
          apt update && apt upgrade -y && apt install -y git curl python lsb-release sudo
          cd build
          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-         /depot_tools/gclient
+         /build/depot_tools/gclient
         EOF
         
         docker commit build-deps build:build-deps
