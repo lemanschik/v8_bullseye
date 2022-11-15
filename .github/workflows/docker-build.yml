@@ -106,6 +106,6 @@ jobs:
         EOF
 
         ## Build Result
-        #docker cp build-v8-bullseye-x86_64:/v8/out.gn/x64.release/obj/libv8_monolith.a build/v8/v8-bullseye-x86_64.a
-        #docker cp build-v8-bullseye-x86_64:/v8/include build/v8/include
+        docker cp build-v8-bullseye-x86_64:/v8/out.gn/x64.release/obj/libv8_monolith.a build/v8/v8-bullseye-x86_64.a
+        docker cp build-v8-bullseye-x86_64:/v8/include build/v8/include
 
