@@ -25,7 +25,7 @@ jobs:
         path: build-deps
         key: deps-bullseye-x86_64
     - name: build-linux-x86_64 - Create work for Ninja's
-      if: steps.cache.outputs.cache-hit != 'true'
+      if: steps.cache-build-deps-linux-x86_64.outputs.cache-hit != 'true'
       env:
         PATHS: ${{ env.PATH }}
         DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
