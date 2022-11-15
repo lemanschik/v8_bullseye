@@ -32,14 +32,9 @@ jobs:
       run: |
         mkdir -p build-deps
         
-        export UID=$(id -u)
-        export GID=$(id -g)
-        docker run -it \
-            --user $UID:$GID \
-            --workdir="/home/$USER" \
-            
-        
-        
+        #export UID=$(id -u)
+        #export GID=$(id -g)
+                  
         # Note that this is exactly what docker build does for each RUN defined layer
         cat <<'EOF' | docker run --user $UID:$GID -v /etc/group:/etc/group:ro -v /etc/passwd:/etc/passwd:ro" -v /etc/shadow:/etc/shadow:ro -v $(pwd)/build-deps:/build -i --name build-deps debian:bullseye-slim
          apt update && apt upgrade -y && apt install -y git curl python lsb-release sudo
