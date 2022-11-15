@@ -98,7 +98,7 @@ jobs:
         PATHS: ${{ env.PATH }}
         DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
       run: |
-        # Note that this is exactly what docker build does for each RUN defined layer
+        gzip -cd build/v8-bullseye-x86_64_latest.tar.gz | docker load -
 
         cat <<'EOF' | docker run -i --name build-v8-bullseye-x86_64 v8-bullseye-x86_64:latest
           cd v8
