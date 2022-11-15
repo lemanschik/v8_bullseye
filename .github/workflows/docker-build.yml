@@ -44,9 +44,10 @@ jobs:
         # docker save v8-bullseye-x86_64:latest | gzip > build-deps/v8-bullseye-x86_64_latest.tar.gz
         
         cat <<'EOF' | docker run -v $(pwd)/build-deps:/build -i --name build-v8-deps-bullseye-x86_64 build:build-deps
-          cd build
+          cd /build
           /build/depot_tools/fetch v8 
-          cd /build/v8 && git checkout branch-heads/10.8 
+          cd /build/v8 
+          git checkout branch-heads/10.8 
           /build/depot_tools/gclient sync
           /build/v8/build/install-build-deps.sh --no-syms --no-chromeos-fonts --no-arm --no-nacl --no-backwards-compatible
           /build/v8/tools/dev/v8gen.py x64.release -- target_os=\"linux\" target_cpu=\"x64\" v8_target_cpu=\"x64\" \
@@ -84,10 +85,10 @@ jobs:
             v8_enable_sandbox=false
         EOF
 
-        docker commit build-v8-deps-bullseye-x86_64 v8-bullseye-x86_64:latest 
+        docker commit build-v8-deps-bullseye-x86_64 v8-deps-bullseye-x86_64:latest 
 
         ## Build Cache the updated image
-        docker save v8-bullseye-x86_64:latest | gzip > build-deps/v8-bullseye-x86_64_latest.tar.gz
+        docker save v8-deps-bullseye-x86_64:latest | gzip > build-deps/v8-bullseye-x86_64_latest.tar.gz
     - name: build-linux-x86_64 - Turning on the Servers for the Ninja Coders that work on this job.
       id: use-cache
       uses: actions/cache@v3
@@ -101,13 +102,17 @@ jobs:
         PATHS: ${{ env.PATH }}
         DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
       run: |
+        # Should be only 
         # docker load -i build-deps/v8-bullseye-x86_64_latest.tar.gz
         # 
         # looks like we use the same docker host even in other runs thats great the container is around
-        docker exec -w /build/v8 build-v8-deps-bullseye-x86_64 /build/depot_tools/ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN)
+        # docker exec -w /build/v8 build-v8-deps-bullseye-x86_64 /build/depot_tools/ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN)
+        cat <<'EOF' | docker run -v $(pwd)/build-deps:/build -w /build/v8 -i --name build-v8-bullseye-x86_64 v8-deps-bullseye-x86_64:latest
+          /build/depot_tools/ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN)
+        EOF
         
         ## Build Result
-        mkdir dist/v8
         # TODO Export the whole obj folder to build distributed build cache.
+        mkdir -p dist/v8
         cp build-deps/v8/out.gn/x64.release/obj/libv8_monolith.a dist/v8/v8-bullseye-x86_64.a
         cp -r build-deps/v8/include dist/v8
