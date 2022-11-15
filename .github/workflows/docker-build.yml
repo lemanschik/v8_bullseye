@@ -43,7 +43,7 @@ jobs:
         docker commit build-deps build:build-deps
         # docker save v8-bullseye-x86_64:latest | gzip > build-deps/v8-bullseye-x86_64_latest.tar.gz
         
-        cat <<'EOF' | docker run -v $(pwd)/build-deps:/build -i --name build-v8-bullseye-x86_64 build:build-deps
+        cat <<'EOF' | docker run -v $(pwd)/build-deps:/build -i --name build-v8-deps-bullseye-x86_64 build:build-deps
           cd build
           /build/depot_tools/fetch v8 
           cd /build/v8 && git checkout branch-heads/10.8 
@@ -84,7 +84,7 @@ jobs:
             v8_enable_sandbox=false
         EOF
 
-        docker commit build-v8-bullseye-x86_64 v8-bullseye-x86_64:latest 
+        docker commit build-v8-deps-bullseye-x86_64 v8-bullseye-x86_64:latest 
 
         ## Build Cache the updated image
         docker save v8-bullseye-x86_64:latest | gzip > build-deps/v8-bullseye-x86_64_latest.tar.gz
@@ -101,9 +101,10 @@ jobs:
         PATHS: ${{ env.PATH }}
         DEPOT_TOOLS: ${{ env.DEPOT_TOOLS }}
       run: |
-        docker load -i build-deps/v8-bullseye-x86_64_latest.tar.gz
-
-        cat <<'EOF' | docker run -v $(pwd)/build-deps:/build -i --name build-v8-bullseye-x86_64 v8-bullseye-x86_64:latest
+        # docker load -i build-deps/v8-bullseye-x86_64_latest.tar.gz
+        # v $(pwd)/build-deps:/build -i --name build-v8-bullseye-x86_64 v8-bullseye-x86_64:latest
+        # looks like we use the same docker host even in other runs thats great the container is around
+        cat <<'EOF' | docker exec -i build-v8-deps-bullseye-x86_64
           cd /build/v8
           /build/depot_tools/ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN)
         EOF
