@@ -93,7 +93,7 @@ jobs:
         mkdir build-deps
         docker save image_v8-deps-bullseye-x86_64:latest | gzip > build-deps/image_v8-deps-bullseye-x86_64_latest.tar.gz
         docker export volume_v8-deps-bullseye-x86_64 | gzip > build-deps/volume_v8-deps-bullseye-x86_64_latest.tar.gz
-        docker export container_v8-deps-bullseye-x86_64 | gzip > build-deps/container_v8-deps-bullseye-x86_64_latest.tar.gz
+        docker export container_build-v8-deps-bullseye-x86_64 | gzip > build-deps/container_v8-deps-bullseye-x86_64_latest.tar.gz
     - uses: actions/upload-artifact@v3
       with:
         name: v8-deps-bullseye-x86_64
