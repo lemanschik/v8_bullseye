@@ -7,6 +7,11 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
+    - uses: actions/upload-artifact@v3
+      with:
+        name: v8-deps-bullseye-x86_64
+        path: build-deps
+        if-no-files-found: error
     - name: Open the Office for the Ninjas makes coders feel less cheap to be called Ninja implicits hornor.
       id: set-env
       run: |
