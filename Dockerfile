@@ -55,4 +55,7 @@ RUN /depot_tools/ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESS
 
 # Commit it under its NAME with the Tag: latest as Image
 # docker commit $(docker ps -l --format {{.ID}}) $(docker ps -l --format {{.NAME}}):latest
-# Output: v8-bullseye-x86_64:latest
+# Output: v8-bullseye-x86_64:latest === This Dockerfiles Result
+
+# docker save v8-bullseye-x86_64:latest | gzip > v8-bullseye-x86_64-latest.tar.gz
+# above created tar includes 2 seperated tar files for the images one for sysroot one for build result.
