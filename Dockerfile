@@ -1,5 +1,6 @@
+# Note that this is exactly what docker build does for each RUN defined layer
+# cat <<'EOF' | docker run -i --name sysroot-bullseye-x86_64 debian:bullseye-slim
 FROM debian:bullseye-slim
-
 RUN export DEBIAN_FRONTEND=noninteractive \
  && apt-get update -y && apt-get -qq install git curl python lsb-release sudo \
  && git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git \
@@ -41,4 +42,17 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 	v8_enable_pointer_compression=true \
 	v8_scriptormodule_legacy_lifetime=true \
 	v8_enable_sandbox=false
+# EOF
+
+# Commit it under its NAME with the Tag: latest as Image
+# docker commit $(docker ps -l --format {{.ID}}) $(docker ps -l --format {{.NAME}}):latest
+# Output: sysroot-bullseye-x86_64:latest
+
+# reuse above mentioned Image
+# cat <<'EOF' | docker run -i --name v8-bullseye-x86_64 $(docker ps -l --format {{.NAME}}):latest
 RUN /depot_tools/ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESSORS_ONLN)
+# EOF
+
+# Commit it under its NAME with the Tag: latest as Image
+# docker commit $(docker ps -l --format {{.ID}}) $(docker ps -l --format {{.NAME}}):latest
+# Output: v8-bullseye-x86_64:latest
