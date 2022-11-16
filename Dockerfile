@@ -1,3 +1,4 @@
+# cat <<'SHA_SUM_CREATION' | sha256sum
 # Note that this is exactly what docker build does for each RUN defined layer
 # cat <<'EOF' | docker run -i --name sysroot-bullseye-x86_64 debian:bullseye-slim
 FROM debian:bullseye-slim
@@ -59,3 +60,4 @@ RUN /depot_tools/ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESS
 
 # docker save v8-bullseye-x86_64:latest | gzip > v8-bullseye-x86_64-latest.tar.gz
 # above created tar includes 2 seperated tar files for the images one for sysroot one for build result.
+SHA_SUM_CREATION
