@@ -60,4 +60,5 @@ RUN /depot_tools/ninja v8_monolith -C out.gn/x64.release/ -j $(getconf _NPROCESS
 
 # docker save v8-bullseye-x86_64:latest | gzip > v8-bullseye-x86_64-latest.tar.gz
 # above created tar includes 2 seperated tar files for the images one for sysroot one for build result.
-SHA_SUM_CREATION
+# SHA_SUM_CREATION
+# 8f5848ef193c85cc74abe276b8be2d88a94eb88523a69b30ddbe681f32ff98a6  
